@@ -3,11 +3,15 @@
  */
 package graphique;
 
+import java.util.ArrayList;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -54,6 +58,8 @@ public class Fenetre extends Application {
     }
 
     class MainGroup extends Parent {
+        
+        private ArrayList<Circle> listeCercles = new ArrayList<>();
 
         //
         private Label nomJoueur1;
@@ -63,7 +69,6 @@ public class Fenetre extends Application {
         public int espace = (Config.hauteurFenetre - marge * 2) / Config.taillePlateau;
 
         MainGroup() {
-
             // Tracement du plateau
             int iterateurX = marge + espace / 2;
             int iterateurY = marge + espace / 2;
@@ -87,12 +92,13 @@ public class Fenetre extends Application {
 
             // Caractéristiques
             Font font = new Font("Trebuchet MS", 18);
+            int posXDroit = Config.hauteurFenetre + 25;
             // Rond noir
             Circle cercle1 = new Circle(Config.hauteurFenetre + 15, 25, 7);
             cercle1.setFill(Color.BLACK);
             this.getChildren().add(cercle1);
             nomJoueur1 = new Label("Joueur 1");
-            nomJoueur1.setTranslateX(Config.hauteurFenetre + 25);
+            nomJoueur1.setTranslateX(posXDroit);
             nomJoueur1.setTranslateY(20);
             nomJoueur1.setFont(font);
             nomJoueur1.setTextFill(Color.web("#a30000"));
@@ -101,12 +107,20 @@ public class Fenetre extends Application {
             cercle2.setFill(Color.WHITE);
             this.getChildren().add(cercle2);
             nomJoueur2 = new Label("Joueur 2");
-            nomJoueur2.setTranslateX(Config.hauteurFenetre + 25);
+            nomJoueur2.setTranslateX(posXDroit);
             nomJoueur2.setTranslateY(50);
             nomJoueur2.setFont(font);
             nomJoueur2.setTextFill(Color.web("#0076a3"));
             this.getChildren().addAll(nomJoueur1, nomJoueur2);
 
+            // Bouton pour recommencer
+            Button recommencer = new Button("Recommencer");
+            recommencer.setTranslateX(posXDroit);
+            recommencer.setTranslateY(100);
+            recommencer.setOnAction((ActionEvent event) -> {
+                enleverCercle();
+            });
+            this.getChildren().add(recommencer);
         }
 
         public void changerNoms(String nom1, String nom2) {
@@ -159,6 +173,7 @@ public class Fenetre extends Application {
             if (Plateau.tab[i][j].equals("EMPTY") && estAProximite(pointPlateauX, pointPlateauY, (int) x, (int) y)) {
                 Circle cercleCentral = new Circle(pointPlateauX, pointPlateauY, 10);
                 cercleCentral.setFill(ConfigPartie.recupererCouleurTour());
+                this.listeCercles.add(cercleCentral);
                 this.getChildren().add(cercleCentral);
 
                 Plateau.mettreEnMemoire(i, j);
@@ -179,6 +194,19 @@ public class Fenetre extends Application {
                 return true;
             }
             return false;
+        }
+        
+        /**
+         * Enlève tous les cercles dessinés au cours de la partie.
+         */
+        private void enleverCercle() {
+            // Enlevage
+            this.getChildren().removeAll(listeCercles);
+            // Ré-initialisation de la liste
+            this.listeCercles = new ArrayList<>();
+            // Vidage de la mémoire
+            Plateau.initialiserTableau();
+            ConfigPartie.tour = true;
         }
     }
 }
