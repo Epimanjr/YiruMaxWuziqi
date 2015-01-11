@@ -42,7 +42,6 @@ public class Plateau {
         String contenu = tab[posX][posY];
         // DEBUT TEST HORIZONTAL
         int iterateur = 1;
-        String contenuTmp = "";
         int indice = 1;
         boolean verifie = true;
         while (verifie) {
@@ -66,6 +65,81 @@ public class Plateau {
             return true;
         }
         // FIN TEST HORIZONTAL
+        // DEBUT TEST VERTICAL
+        iterateur = 1;
+        indice = 1;
+        verifie = true;
+        while (verifie) {
+            verifie = verifie(posX, posY - indice, contenu);
+            if (verifie) {
+                iterateur++;
+                indice++;
+            }
+        }
+        indice = 1;
+        verifie = true;
+        while (verifie) {
+            verifie = verifie(posX, posY + indice, contenu);
+            if (verifie) {
+                iterateur++;
+                indice++;
+            }
+        }
+        if (iterateur >= 5) {
+            System.out.println(iterateur + " éléments à la vertical.");
+            return true;
+        }
+        // FIN TEST VERTICAL
+        // DEBUT TEST DIAGONALE 1
+        iterateur = 1;
+        indice = 1;
+        verifie = true;
+        while (verifie) {
+            verifie = verifie(posX - indice, posY - indice, contenu);
+            if (verifie) {
+                iterateur++;
+                indice++;
+            }
+        }
+        indice = 1;
+        verifie = true;
+        while (verifie) {
+            verifie = verifie(posX + indice, posY + indice, contenu);
+            if (verifie) {
+                iterateur++;
+                indice++;
+            }
+        }
+        if (iterateur >= 5) {
+            System.out.println(iterateur + " éléments à la diagonale.");
+            return true;
+        }
+        // FIN TEST DIAGONALE 1
+        // DEBUT TEST DIAGONALE 2
+        iterateur = 1;
+        indice = 1;
+        verifie = true;
+        while (verifie) {
+            verifie = verifie(posX + indice, posY - indice, contenu);
+            if (verifie) {
+                iterateur++;
+                indice++;
+            }
+        }
+        indice = 1;
+        verifie = true;
+        while (verifie) {
+            verifie = verifie(posX - indice, posY + indice, contenu);
+            if (verifie) {
+                iterateur++;
+                indice++;
+            }
+        }
+        if (iterateur >= 5) {
+            System.out.println(iterateur + " éléments à la diagonale.");
+            return true;
+        }
+        // FIN TEST DIAGONALE 2
 
         return false;
     }
